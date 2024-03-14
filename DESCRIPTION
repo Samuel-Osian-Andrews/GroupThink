@@ -1,12 +1,11 @@
 Package: GroupThink
 Title: Aggregates Survey Data into Neat Tables
-Version: 0.0.1.9000
+Version: 0.0.1.9001
 Authors@R: 
     person("Sam", "Andrews", "soandrews98@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
