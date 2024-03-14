@@ -7,6 +7,7 @@
 #' @return An aggregated table of responses within specified groups.
 #' @export
 gather <- function(df, cols, ..., ignore = NULL,
+                   filter = NULL,
                    terminal = FALSE) {
   cols_names <- names(df)[cols]
   
@@ -50,8 +51,8 @@ gather <- function(df, cols, ..., ignore = NULL,
     filter(!is.na(response) & response != "Ignore") %>%
     mutate(question = factor(question, levels = cols_names))
 
-  # **Important Change**: Explicitly order 'response' based on the specified group order
-  # Do this immediately after pivot and filtering to ensure correct level ordering
+  # Explicitly order 'response' based on the specified group order
+  # ...Do this immediately after pivot and filtering to ensure correct level ordering
   processed_df$response <- factor(processed_df$response, levels = group_order)
   
   processed_df <- processed_df %>%
@@ -61,6 +62,12 @@ gather <- function(df, cols, ..., ignore = NULL,
     dplyr::group_by(question) %>%
     dplyr::mutate(proportion = round(n / sum(n) * 100, 1)) %>%
     dplyr::ungroup()
+
+  # Apply filter if specified
+   if (!is.null(filter)) {
+    processed_df <- processed_df %>% 
+        filter(response %in% filter)
+   }
 
   # Display the table
   if (!terminal) {
