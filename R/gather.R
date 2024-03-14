@@ -7,7 +7,7 @@
 #' @return An aggregated table of responses within specified groups.
 #' @export
 gather <- function(df, cols, ..., ignore = NULL,
-    terminal = FALSE) {
+                   terminal = FALSE) {
   cols_names <- names(df)[cols]
   
   # Process grouping arguments
@@ -15,6 +15,9 @@ gather <- function(df, cols, ..., ignore = NULL,
   if (!is.null(ignore)) {
     groups$Ignore <- ignore
   }
+  
+  # Ensure the order of groups reflects the order in the function arguments
+  group_order <- names(groups)
   
   # Check for unaccounted responses. Throw error if any are found.
   all_responses <- unique(unlist(lapply(df[cols], unique)))
@@ -45,7 +48,13 @@ gather <- function(df, cols, ..., ignore = NULL,
   processed_df <- df %>%
     tidyr::pivot_longer(cols_names, names_to = "question", values_to = "response") %>%
     filter(!is.na(response) & response != "Ignore") %>%
-    mutate(question = factor(question, levels = cols_names)) %>%
+    mutate(question = factor(question, levels = cols_names))
+
+  # **Important Change**: Explicitly order 'response' based on the specified group order
+  # Do this immediately after pivot and filtering to ensure correct level ordering
+  processed_df$response <- factor(processed_df$response, levels = group_order)
+  
+  processed_df <- processed_df %>%
     dplyr::group_by(question, response) %>%
     dplyr::count() %>%
     dplyr::ungroup() %>%
