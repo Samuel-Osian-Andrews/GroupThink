@@ -6,20 +6,25 @@
 #' @param ignore A character vector of responses to be ignored from the table and calculations.
 #' @return An aggregated table of responses within specified groups.
 #' @export
-gather <- function(df, cols, ..., ignore = NULL,
-                   filter = NULL,
-                   terminal = FALSE) {
+gather <- function(df, # ...dataframe to process
+                   cols, # ...columns index(es) to process
+                   ..., # ... allows for multiple groups to be specified
+                   ignore = NULL, # ...responses to ignore from calculations
+                   filter = NULL, # ...responses to filter for the output
+                   tibble = FALSE, # ...whether outputs as a tibble
+                   col_split = TRUE) # ...split responses into separate columns
+{
   cols_names <- names(df)[cols]
-  
+
   # Process grouping arguments
   groups <- list(...)
   if (!is.null(ignore)) {
     groups$Ignore <- ignore
   }
-  
+
   # Ensure the order of groups reflects the order in the function arguments
   group_order <- names(groups)
-  
+
   # Check for unaccounted responses. Throw error if any are found.
   all_responses <- unique(unlist(lapply(df[cols], unique)))
   grouped_responses <- unique(unlist(groups))
@@ -30,7 +35,7 @@ gather <- function(df, cols, ..., ignore = NULL,
          ". Please check your grouping arguments.")
   }
   
-  # Recategorize specified columns based on groups
+  # Recategorise specified columns based on groups
   df[cols] <- lapply(df[cols], function(col) {
     sapply(col, function(response) {
       found_group <- NA
@@ -64,13 +69,21 @@ gather <- function(df, cols, ..., ignore = NULL,
     dplyr::ungroup()
 
   # Apply filter if specified
-   if (!is.null(filter)) {
-    processed_df <- processed_df %>% 
-        filter(response %in% filter)
-   }
+  if (!is.null(filter)) {
+    processed_df <- processed_df %>%
+      filter(response %in% filter)
+  }
+
+  if (col_split) {
+    # Spread responses to wide format
+    processed_df <- processed_df %>%
+      tidyr::pivot_wider(names_from = response,
+                         values_from = c(n, proportion),
+                         names_glue = "{response} ({.value})")
+  }
 
   # Display the table
-  if (!terminal) {
+  if (!tibble) {
     processed_df %>% gt::gt()
   } else {
     print(processed_df)
