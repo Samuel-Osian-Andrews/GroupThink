@@ -1,0 +1,191 @@
+---
+title: "readme"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introducing GroupThink
+
+GroupThink is a package designed to assist in the analysis in categorical survey data. It currently has just one function - `unify()` (though others are planned for the future!).
+
+```{r simulate, echo=FALSE}
+# Activate libraries
+library(tidyverse)
+library(gt)
+
+# Create a sample dataset
+set.seed(1357)
+
+data <- tibble(
+  `I find the course material engaging and relevant.` = factor(sample(
+    c("Entirely agree", "Somewhat agree", "Neutral", "Somewhat disagree", "Entirely disagree", "Don't know"),
+    100, replace = TRUE), levels = c("Entirely disagree", "Somewhat disagree", "Neutral", "Somewhat agree", "Entirely agree", "Don't know")),
+  `The course workload is manageable within my schedule.` = factor(sample(
+    c("Highly agree", "Agree", "Neither agree nor disagree", "Disagree", "Highly disagree", "Unsure"),
+    100, replace = TRUE), levels = c("Highly disagree", "Disagree", "Neither agree nor disagree", "Agree", "Highly agree", "Unsure")),
+  `Feedback from assignments is helpful for my learning.` = factor(sample(
+    c("Strongly agree", "Agree", "Indifferent", "Disagree", "Strongly disagree", "No opinion"),
+    100, replace = TRUE), levels = c("Strongly disagree", "Disagree", "Indifferent", "Agree", "Strongly agree", "No opinion"))
+)
+
+# Function to randomly introduce NAs into a vector
+introduce_NAs <- function(x, Proportion = 0.05) {
+  na_indices <- sample(1:length(x), size = floor(Proportion * length(x)), replace = FALSE)
+  x[na_indices] <- NA
+  return(x)
+}
+
+data <- data %>%
+  mutate(
+    `I find the course material engaging and relevant.` = introduce_NAs(`I find the course material engaging and relevant.`),
+    `The course workload is manageable within my schedule.` = introduce_NAs(`The course workload is manageable within my schedule.`),
+    `Feedback from assignments is helpful for my learning.` = introduce_NAs(`Feedback from assignments is helpful for my learning.`)
+  )
+```
+
+## `unify()` 'at a glance'
+
+The `unify()` function groups together Likert-style responses for a given question or set of questions, returning a summarised output that contains the n and proportion for each of these groupings.
+
+```{r unify}
+unify(data, # ...the name of your dataframe
+      1, # ...the index number(s) of the column(s) you want to analyse
+      
+      # Below, we 'group' responses via custom grouping labels (e.g. 'Agree'):
+      Agree = c("Somewhat agree", "Strongly agree"),
+      Disagree = c("Somewhat disagree", "Strongly disagree"),
+      Neutral = "Neither agree nor disagree",
+
+      ignore = "Don't know") # ...optionally, set response(s) to ignore from calcs
+```
+
+These grouped responses can be renamed into anything you like. For example, `Agree` could instead be `Positive`, `Good`, `Satisifed` or something else entirely. Similarly, `Don't know` could be its own group, instead of being ignored. You may include as many custom groups as you'd like.
+
+There's of course nothing stopping you from having just 1 response option per group (e.g. `"Somewhat agree" = "Somewhat agree"`). A main purpose of `unify()` is that it forces you to be *intentional* with how you handle your data, to improve consistency and avoid mistakes.
+
+If you forgot to include a response in your custom groupings, `unify()` will throw an error. This makes it *much* harder to make an error in the 'n' and 'proportion' calculations. For example:
+
+```{r error}
+unify(data, 1, Agree = c("Somewhat agree", "Strongly agree"),
+      Disagree = c("Somewhat disagree", "Strongly disagree"),
+      Neutral = "Neither agree nor disagree")
+
+      #ignore = "Don't know" -- let's stop unify() from seeing this line
+```
+
+As seen above, the output tells you that you forgot to assign "Don't know" to a grouping variable.
+
+## Data for unify()
+
+The `unify()` function expects data that looks like this:
+
+```{r head, echo=FALSE}
+head(data, n = 25)
+```
+
+Responses can be strings, factors of numbers (provided the numbers are coded responses - e.g. 5 = Strongly agree) They do not need to be consistently labelled either within or between different questions, and can contain missing data (you'll likely want to assign `NA` to the ignore parameter).
+
+## Benefits of `unify()`
+
+-   **Allows for easy groupings.** `unify()` makes it very easy to group together different Likert-style responses (e.g. combining `Somewhat agree` with `Strongly agree`, or `Excellent` and `Very good`). You do not need to manually recode your data. Because of this, it's now *very* difficult to make mistakes with incorrect groupings, as `unify()` will alert you of any unassigned responses.
+-   **Automates your calculations.** Typically, to calculate the *n* and *proportions* for grouped categorical variables, you'd use the `tidyverse`'s `pivot_longer()` and `pivot_wider` functions. For multiple columns, this can get messy and can lead to mistakes. Also, any errors made in intermediary steps can affect the accuracy of your final analysis, possibly without you even knowing. Instead, `unify()` handles all of this for you under the hood.
+-   **Works with full questions as column headers**. Typically, exporting surveys responses (such as from Microsoft Forms or SurveyMonkey) will leave you with long questions as column headers. This is usually a nightmare in R. Because `unify()` works on column indexes, rather than column names, you do not have to spend time manually recoding your questions/columns.
+-   **Usable outputs**. This function neatly integrates with ggplot, allowing you to visualise your aggregated data. Alternatively, you can produce formatted tables through the gtTable argument, including customisation options. 
+-   **Clear, readable syntax**. Even for those unfamiliar with R syntax, `unify()` makes it very clear exactly how you've grouped together your responses, improving readability and reproducibility.
+-   **Faster insights**. With just a few lines of code, this function could save you hours worth of work for large survey projects.
+
+
+## Further functionality
+
+#### Aggregate across multiple columns/questions
+
+You are not restricted to analysing just one question/column with `unify()`. You can specify multiple columns/questions to use for the output:
+
+```{r cols}
+unify(data,
+      c(1, 6, 7), # ...use columns 1, 6 and 7.
+      Agree = c("Somewhat agree", "Strongly agree"),
+      Disagree = c("Somwewhat disagree", "Strongly disagree"),
+      Neither = "Neither agree nor disagree",
+      
+      col_split = TRUE)
+```
+
+
+Note that `col_split` is an optional argument that splits response groups by columns rather than by rows. It is useful when calling the function on multiple questions/columns. By default, it's set to FALSE.
+
+
+#### Handle inconsistent labelling between columns/questions.
+
+Different Likert-style questions can take different forms. For example, one question might be on an Agree/Disagree scale, another Good/Poor and another might also use Good/Poor, but with different capitalisations.
+
+By design, `unify()` will not let you proceed unless *all* response options are grouped (this is to avoid mistakes in calculations). So all you need to do is specify all response options across your range of columns.
+
+```{r inconsistent}
+unify(data, c(1, 8, 9),
+      Positive = c("Somewhat agree", "Strongly agree",
+                   "Good", "Very good",
+                   "Very Good"), # ...notice different capitalisation!
+      Negative = c("Somewhat disagree", "Strongly disagree",
+                   "Poor", "Very poor",
+                   "Very Poor"), # ...again, different capitalisation
+      ignore = c("Neither agree nor disagree", NA),
+      
+      col_split = TRUE)
+```
+
+#### Ignore responses, such as "Don't know" or NA.
+
+You might want `Don't know` to be its own separate group in your aggregated table. Other times, you might want to remove them entirely. For the latter case, set the `ignore` parameter in your `unify()` function call.
+
+This will not just remove them from the table, but will ensure they do not form part of the function's 'proportion' calculations.
+
+```{r ignore}
+unify(data, 1,
+      Agree = c("Somewhat agree", "Strongly agree"),
+      Disagree = c("Somwewhat disagree", "Strongly disagree"),
+      Neither = "Neither agree nor disagree",
+      
+      ignore = c(NA, "Don't know")) # ...ignore missing values and "Don't know"
+#                                        responses
+```
+
+#### Filter out responses from the output only
+
+Above, we use `ignore` to filter out responses from the output *and* the calculations. However, if you want to only include some response groups in the table but not from the calculations, we can use the `filter` argument.
+
+```{r filter}
+unify(data, 1,
+      Agree = c("Somewhat agree", "Strongly agree"),
+      Disagree = c("Somwewhat disagree", "Strongly disagree"),
+      Neither = "Neither agree nor disagree",
+      
+      filter = "Agree") # ...only include the Agree group in the output
+```
+
+#### Integrate with ggplot
+
+Unless you've set `unify()`'s gt_table() argument to `TRUE`, it will output as a tibble. This means it integrates neatly into `ggplot()` function calls. 
+
+Let's pretend we've already run `unify()` and assigned it to the name `united`...
+
+```{r ggplot}
+ggplot(data = united, # ...unify() output becomes ggplot()'s data argument
+       aes(x = Response, y = Proportion)) +
+  geom_bar() +
+  theme_minimal()
+```
+
+
+## Future plans
+
+-   Add support for `stargazer` tables into `unify()`.
+
+-   Develop a separate function for analysing multiple choice data for data formats typical of exported survey data.
+
+-   Develop a separate function that summarises specified columns of a data frame, outlining: the index numbers of each question/column; all of the response options that need to be accounted for; the extent of missing data.
+
+-   Develop a function that uses unsupervised learning to group or cluster respondents based off their responses patterns. This will assist in identifying subgroups within the data who might have distinct characteristics or opinions. The aim of this function will be to simplify unsupervised learning for users, rather than providing them total control over the algorithm and approach.

@@ -1,10 +1,10 @@
 Package: GroupThink
-Title: Aggregates Survey Data into Neat Tables
-Version: 0.0.1.9007
+Title: A package for streamlined survey data analysis
+Version: 0.0.1.9008
 Authors@R: 
     person("Sam", "Andrews", "soandrews98@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           comment = c(ORCID = "0009-0000-7644-6218"))
+Description: GroupThink streamlines traditional survey analysis tasks, such as recoding and presenting Likert-style data and multiple choice data. Its aim is to avoid key bottlenecks in the analysis process, and to prevent common issues and bugs typical of survey analysis code. 
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

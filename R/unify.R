@@ -82,7 +82,7 @@ unify <- function(df, # ...dataframe to process
   # Explicitly order 'response' based on the specified group order
   # ...Do this immediately after pivot and filtering to ensure correct level ordering
   processed_df$Response <- factor(processed_df$Response, levels = group_order)
-  
+
   processed_df <- processed_df %>%
     dplyr::group_by(Question, Response) %>%
     dplyr::count() %>%
