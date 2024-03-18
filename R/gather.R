@@ -8,12 +8,33 @@
 #' @export
 gather <- function(df, # ...dataframe to process
                    cols, # ...columns index(es) to process
-                   ..., # ... allows for multiple groups to be specified
+                   ..., # ... specify groups to recategorise responses
                    ignore = NULL, # ...responses to ignore from calculations
                    filter = NULL, # ...responses to filter for the output
-                   tibble = FALSE, # ...whether outputs as a tibble
-                   col_split = TRUE) # ...split responses into separate columns
+                   tibble = TRUE, # ...whether outputs as a tibble
+                   gt_table = FALSE, # ...whether outputs as a gt table
+                   col_split = FALSE, # ...split responses into separate columns
+                   rm_response = FALSE) # ...remove the response column
 {
+
+  # Stop user from using both tibble and gt options
+  if (tibble & gt_table) {
+    stop("Both tibble and gt_table options are set to TRUE.
+    Please choose either tibble or gt_table for the output, not both.")
+  }
+
+  # Check that user has supplied either tibble or gt options
+  if (!tibble & !gt_table) {
+    stop("Both tibble and gt_table options are set to FALSE.
+    Please choose either tibble or gt_table for the output.")
+  }
+
+  # Stop user from specifying both col_split and rm_response options
+  if (col_split & rm_response) {
+    stop("Both col_split and rm_response options are set to TRUE.
+    Splitting by columns demands that the response field is kept.")
+  }
+
   cols_names <- names(df)[cols]
 
   # Process grouping arguments
@@ -37,10 +58,10 @@ gather <- function(df, # ...dataframe to process
   
   # Recategorise specified columns based on groups
   df[cols] <- lapply(df[cols], function(col) {
-    sapply(col, function(response) {
+    sapply(col, function(Response) {
       found_group <- NA
       for (group_name in names(groups)) {
-        if (response %in% groups[[group_name]]) {
+        if (Response %in% groups[[group_name]]) {
           found_group <- group_name
           break
         }
@@ -52,37 +73,43 @@ gather <- function(df, # ...dataframe to process
   # Wrangle the data into a tidy format, calculating proportions
   
   processed_df <- df %>%
-    tidyr::pivot_longer(cols_names, names_to = "question", values_to = "response") %>%
-    filter(!is.na(response) & response != "Ignore") %>%
-    mutate(question = factor(question, levels = cols_names))
+    tidyr::pivot_longer(cols_names, names_to = "Question", values_to = "Response") %>%
+    dplyr::filter(!is.na(Response) & Response != "Ignore") %>%
+    dplyr::mutate(question = factor(Question, levels = cols_names))
 
   # Explicitly order 'response' based on the specified group order
   # ...Do this immediately after pivot and filtering to ensure correct level ordering
-  processed_df$response <- factor(processed_df$response, levels = group_order)
+  processed_df$Response <- factor(processed_df$Response, levels = group_order)
   
   processed_df <- processed_df %>%
-    dplyr::group_by(question, response) %>%
+    dplyr::group_by(Question, Response) %>%
     dplyr::count() %>%
     dplyr::ungroup() %>%
-    dplyr::group_by(question) %>%
-    dplyr::mutate(proportion = round(n / sum(n) * 100, 1)) %>%
+    dplyr::group_by(Question) %>%
+    dplyr::mutate(Proportion = round(n / sum(n) * 100, 1)) %>%
     dplyr::ungroup()
 
   # Apply filter if specified
   if (!is.null(filter)) {
     processed_df <- processed_df %>%
-      filter(response %in% filter)
+      filter(Response %in% filter)
   }
 
   if (col_split) {
     # Spread responses to wide format
     processed_df <- processed_df %>%
-      tidyr::pivot_wider(names_from = response,
-                         values_from = c(n, proportion),
-                         names_glue = "{response} ({.value})")
+      tidyr::pivot_wider(names_from = Response,
+                         values_from = c(n, Proportion),
+                         names_glue = "{Response} ({.value})")
   }
 
-  # Display the table
+# Remove the Response column if specified
+  if (rm_response & !col_split) {
+    processed_df <- processed_df %>%
+      select(-Response)
+  }
+
+  # Display the tibble
   if (!tibble) {
     processed_df %>% gt::gt()
   } else {
