@@ -2,10 +2,20 @@
 #'
 #' @param df A dataframe or tibble.
 #' @param cols A column index or vector of column indices.
-#' @param ... Groups of character vectors containing responses to be aggregated together. Each group is a named list of responses.
-#' @param ignore A character vector of responses to be ignored from the table and calculations.
+#' @param ... Groups containing a string or string vector conforming to responses in the specified column(s).
+#' @param ignore A string or string vector of responses to be ignored from the table and calculations.
+#' @param filter A string or string vector of responses to filter for the output.
+#' @param tibble A logical value indicating whether to output as a tibble.
+#' @param gtTable A logical value indicating whether to output as a gt table.
+#' @param colSplit A logical value indicating whether to split responses into separate columns in the output.
+#' @param hideResponse A logical value indicating whether to hide the response field from the output.
+#' @param hideN A logical value indicating whether to hide the n field from the output.
+#' @param hideProportion A logical value indicating whether to hide the proportion field from the output.
 #' @return An aggregated table of responses within specified groups.
 #' @export
+#' @import dplyr
+#' @import tidyr
+#' @import gt
 unify <- function(df, # ...dataframe to process
                    cols, # ...columns index(es) to process
                    ..., # ... specify groups to recategorise responses

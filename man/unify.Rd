@@ -23,9 +23,23 @@ unify(
 
 \item{cols}{A column index or vector of column indices.}
 
-\item{...}{Groups of character vectors containing responses to be aggregated together. Each group is a named list of responses.}
+\item{...}{Groups containing a string or string vector conforming to responses in the specified column(s).}
 
-\item{ignore}{A character vector of responses to be ignored from the table and calculations.}
+\item{ignore}{A string or string vector of responses to be ignored from the table and calculations.}
+
+\item{filter}{A string or string vector of responses to filter for the output.}
+
+\item{tibble}{A logical value indicating whether to output as a tibble.}
+
+\item{gtTable}{A logical value indicating whether to output as a gt table.}
+
+\item{colSplit}{A logical value indicating whether to split responses into separate columns in the output.}
+
+\item{hideResponse}{A logical value indicating whether to hide the response field from the output.}
+
+\item{hideN}{A logical value indicating whether to hide the n field from the output.}
+
+\item{hideProportion}{A logical value indicating whether to hide the proportion field from the output.}
 }
 \value{
 An aggregated table of responses within specified groups.
