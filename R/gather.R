@@ -12,26 +12,28 @@ gather <- function(df, # ...dataframe to process
                    ignore = NULL, # ...responses to ignore from calculations
                    filter = NULL, # ...responses to filter for the output
                    tibble = TRUE, # ...whether outputs as a tibble
-                   gt_table = FALSE, # ...whether outputs as a gt table
-                   col_split = FALSE, # ...split responses into separate columns
-                   rm_response = FALSE) # ...remove the response column
+                   gtTable = FALSE, # ...whether outputs as a gt table
+                   colSplit = FALSE, # ...split responses into separate columns
+                   hideResponse = FALSE, # ...hide response from output
+                   hideN = FALSE, # ...hide n from output
+                   hideProportion = FALSE) # ...hide proportion from output
 {
 
   # Stop user from using both tibble and gt options
-  if (tibble & gt_table) {
-    stop("Both tibble and gt_table options are set to TRUE.
-    Please choose either tibble or gt_table for the output, not both.")
+  if (tibble & gtTable) {
+    stop("Both tibble and gtTable options are set to TRUE.
+    Please choose either tibble or gtTable for the output, not both.")
   }
 
   # Check that user has supplied either tibble or gt options
-  if (!tibble & !gt_table) {
-    stop("Both tibble and gt_table options are set to FALSE.
-    Please choose either tibble or gt_table for the output.")
+  if (!tibble & !gtTable) {
+    stop("Both tibble and gtTable options are set to FALSE.
+    Please choose either tibble or gtTable for the output.")
   }
 
-  # Stop user from specifying both col_split and rm_response options
-  if (col_split & rm_response) {
-    stop("Both col_split and rm_response options are set to TRUE.
+  # Stop user from specifying both colSplit and hideResponse options
+  if (colSplit & hideResponse) {
+    stop("Both colSplit and hideResponse options are set to TRUE.
     Splitting by columns demands that the response field is kept.")
   }
 
@@ -95,7 +97,7 @@ gather <- function(df, # ...dataframe to process
       filter(Response %in% filter)
   }
 
-  if (col_split) {
+  if (colSplit) {
     # Spread responses to wide format
     processed_df <- processed_df %>%
       tidyr::pivot_wider(names_from = Response,
@@ -103,10 +105,30 @@ gather <- function(df, # ...dataframe to process
                          names_glue = "{Response} ({.value})")
   }
 
-# Remove the Response column if specified
-  if (rm_response & !col_split) {
+  # Remove the Response column if specified
+  if (hideResponse & !colSplit) {
     processed_df <- processed_df %>%
       select(-Response)
+  }
+
+  # Hide n if specified
+  if (hideN & !colSplit) {
+    processed_df <- processed_df %>%
+      select(-n)
+  } else if (hideN & colSplit) {
+    processed_df <- processed_df %>%
+    # Remove n and Proportion columns
+      select(-contains("(n)"))
+  }
+
+  # Hide Proportion if specified
+  if (hideProportion & !colSplit) {
+    processed_df <- processed_df %>%
+      select(-Proportion)
+  } else if (hideProportion & colSplit) {
+    processed_df <- processed_df %>%
+    # Remove n and Proportion columns
+      select(-contains("(Proportion)"))
   }
 
   # Display the tibble
