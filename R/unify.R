@@ -6,7 +6,7 @@
 #' @param ignore A character vector of responses to be ignored from the table and calculations.
 #' @return An aggregated table of responses within specified groups.
 #' @export
-gather <- function(df, # ...dataframe to process
+unify <- function(df, # ...dataframe to process
                    cols, # ...columns index(es) to process
                    ..., # ... specify groups to recategorise responses
                    ignore = NULL, # ...responses to ignore from calculations
