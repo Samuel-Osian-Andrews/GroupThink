@@ -10,7 +10,6 @@ unify(
   ...,
   ignore = NULL,
   filter = NULL,
-  tibble = TRUE,
   gtTable = FALSE,
   colSplit = FALSE,
   hideResponse = FALSE,
@@ -28,8 +27,6 @@ unify(
 \item{ignore}{A string or string vector of responses to be ignored from the table and calculations.}
 
 \item{filter}{A string or string vector of responses to filter for the output.}
-
-\item{tibble}{A logical value indicating whether to output as a tibble.}
 
 \item{gtTable}{A logical value indicating whether to output as a gt table.}
 

@@ -5,7 +5,6 @@
 #' @param ... Groups containing a string or string vector conforming to responses in the specified column(s).
 #' @param ignore A string or string vector of responses to be ignored from the table and calculations.
 #' @param filter A string or string vector of responses to filter for the output.
-#' @param tibble A logical value indicating whether to output as a tibble.
 #' @param gtTable A logical value indicating whether to output as a gt table.
 #' @param colSplit A logical value indicating whether to split responses into separate columns in the output.
 #' @param hideResponse A logical value indicating whether to hide the response field from the output.
@@ -21,25 +20,12 @@ unify <- function(df, # ...dataframe to process
                    ..., # ... specify groups to recategorise responses
                    ignore = NULL, # ...responses to ignore from calculations
                    filter = NULL, # ...responses to filter for the output
-                   tibble = TRUE, # ...whether outputs as a tibble
                    gtTable = FALSE, # ...whether outputs as a gt table
                    colSplit = FALSE, # ...split responses into separate columns
                    hideResponse = FALSE, # ...hide response from output
                    hideN = FALSE, # ...hide n from output
                    hideProportion = FALSE) # ...hide proportion from output
 {
-
-  # Stop user from using both tibble and gt options
-  if (tibble & gtTable) {
-    stop("Both tibble and gtTable options are set to TRUE.
-    Please choose either tibble or gtTable for the output, not both.")
-  }
-
-  # Check that user has supplied either tibble or gt options
-  if (!tibble & !gtTable) {
-    stop("Both tibble and gtTable options are set to FALSE.
-    Please choose either tibble or gtTable for the output.")
-  }
 
   # Stop user from specifying both colSplit and hideResponse options
   if (colSplit & hideResponse) {
@@ -141,8 +127,8 @@ unify <- function(df, # ...dataframe to process
       select(-contains("(Proportion)"))
   }
 
-  # Display the tibble
-  if (!tibble) {
+  # Display the tibble or gt table
+  if (gtTable) {
     processed_df %>% gt::gt()
   } else {
     print(processed_df)
