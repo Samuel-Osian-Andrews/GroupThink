@@ -11,7 +11,7 @@ unify(
   ignore = NULL,
   filter = NULL,
   gtTable = FALSE,
-  colSplit = FALSE,
+  colSplit = TRUE,
   hideResponse = FALSE,
   hideN = FALSE,
   hideProportion = FALSE

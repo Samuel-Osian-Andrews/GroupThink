@@ -21,7 +21,7 @@ unify <- function(df, # ...dataframe to process
                    ignore = NULL, # ...responses to ignore from calculations
                    filter = NULL, # ...responses to filter for the output
                    gtTable = FALSE, # ...whether outputs as a gt table
-                   colSplit = FALSE, # ...split responses into separate columns
+                   colSplit = TRUE, # ...split responses into separate columns
                    hideResponse = FALSE, # ...hide response from output
                    hideN = FALSE, # ...hide n from output
                    hideProportion = FALSE) # ...hide proportion from output
@@ -30,7 +30,8 @@ unify <- function(df, # ...dataframe to process
   # Stop user from specifying both colSplit and hideResponse options
   if (colSplit & hideResponse) {
     stop("Both colSplit and hideResponse options are set to TRUE.
-    Splitting by columns demands that the response field is kept.")
+    Splitting by columns demands that the response field is kept.
+    Please select either colSplit or hideResponse options, not both.")
   }
 
   cols_names <- names(df)[cols]
