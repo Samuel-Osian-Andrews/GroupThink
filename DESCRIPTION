@@ -1,6 +1,6 @@
 Package: GroupThink
 Title: A package for streamlined survey data analysis
-Version: 0.0.1.9012
+Version: 0.0.2.9000
 Authors@R: 
     person(given = "Samuel Osian", family = "Andrews", email = "soandrews98@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0000-7644-6218"))
