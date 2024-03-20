@@ -1,27 +1,36 @@
 ---
 title: "readme"
-output: html_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Introducing GroupThink
+## Introduction and Install
 
 GroupThink is a package designed to assist in the analysis in categorical survey data. It currently has two functions:`unify()` and `assess()` (though others are planned for the future!).
 
 GroupThink isn't on CRAN, so you'll need to use `devtools` to install it. Run:
 
 ```{r install, results='hide', warning=FALSE, error=FALSE, message=FALSE}
-#install.packages("devtools") # ...uncomment this line if needed
+#install.packages("devtools") # ...uncomment line if needed
 library(devtools)
 
 devtools::install_github("Samuel-Osian-Andrews/GroupThink")
 library(GroupThink)
 ```
 
-You only need to do this once. After that, you can just run `library(GroupThink)` like you would for any other package.
+You only need to do this once. After that, you can just run `library(GroupThink)` like you would for any other package. As GroupThink is still in development, you should periodically install the package again in order to get updates.
+
+GroupThink depends on `dplyr`, `tidyr` and `gt` libraries. If these aren't automatically installed, you may need to run:
+
+```{r dependencies}
+#install.packages(c("dplyr", "tidyr", "gt")) # ...uncomment line if needed
+```
+
 
 ```{r simulate, echo=FALSE, results='hide', message=FALSE}
 # Activate libraries
@@ -186,9 +195,9 @@ ggplot(data = united, # ...unify() output becomes ggplot()'s data argument
   theme_minimal()
 ```
 
-#### Even more functionality
+## Even more functionality
 
-For other functionality not covered in this document, please run `?unify()` to view the help file, which covers all possible parameters.
+For other functionality not covered in this document, please run `?unify()` and `?assess()` to view the help file, which covers all function parameters.
 
 ## Future plans
 
@@ -197,3 +206,9 @@ For other functionality not covered in this document, please run `?unify()` to v
 -   Develop a separate function for analysing multiple choice data for data formats typical of exported survey data.
 
 I'd love to know what changes you'd like to see! If you have an idea for either an existing function or a new function altogether - or would like to collaborate - please let me know here!
+
+## Bug reports and feature requests
+
+Please do let me know any issues you come across, or ideas you have for either exising function or even new ones! 
+
+You can use the Issues tab on GitHub for bug reports, and the Discussion tab for feature requests.
