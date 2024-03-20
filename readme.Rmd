@@ -1,8 +1,6 @@
 ---
 title: "readme"
-output:
-  github_document:
-    df_print: paged
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +13,7 @@ GroupThink is a package designed to assist in the analysis in categorical survey
 
 GroupThink isn't on CRAN, so you'll need to use `devtools` to install it. Run:
 
-```{r install, results='hide', warning=FALSE, error=FALSE, message=FALSE}
+```{r install, results='hide', warning=FALSE, error=FALSE, message=FALSE, error=FALSE}
 #install.packages("devtools") # ...uncomment line if needed
 library(devtools)
 
@@ -27,12 +25,12 @@ You only need to do this once. After that, you can just run `library(GroupThink)
 
 GroupThink depends on `dplyr`, `tidyr` and `gt` libraries. If these aren't automatically installed, you may need to run:
 
-```{r dependencies}
+```{r dependencies, error=FALSE}
 #install.packages(c("dplyr", "tidyr", "gt")) # ...uncomment line if needed
 ```
 
 
-```{r simulate, echo=FALSE, results='hide', message=FALSE}
+```{r simulate, echo=FALSE, results='hide', message=FALSE, error=FALSE}
 # Activate libraries
 library(tidyverse)
 library(gt)
@@ -71,7 +69,7 @@ data <- data %>%
 
 The `unify()` function groups together Likert-style responses for a given question or set of questions, returning a summarised output that contains the n and proportion for each of these groupings.
 
-```{r unify}
+```{r unify, error=TRUE}
 unify(data, cols = 1, # ...the name of your dataframe and column(s) to analyse
       
       # Below, we 'group' responses via custom grouping labels (e.g. 'Agree'):
@@ -84,13 +82,13 @@ unify(data, cols = 1, # ...the name of your dataframe and column(s) to analyse
 
 To view all column index numbers for your data frame, you can run `colnames` from base-R.
 
-```{r colnames}
+```{r colnames, error=TRUE}
 colnames(data)
 ```
 
 You might also find it beneficial to run GroupThink's `assess()` function, which provides an overview of the different response options in your specified columns and also provides missing data analysis.
 
-```{r assess}
+```{r assess, error=TRUE}
 assess(data, cols = c(1, 2, 3))
 ```
 
@@ -100,7 +98,7 @@ There's of course nothing stopping you from having just 1 response option per gr
 
 If you forgot to include a response in your custom groupings, `unify()` will throw an error. This makes it *much* harder to make an error in the 'n' and 'proportion' calculations. For example:
 
-```{r error}
+```{r error, error=TRUE}
 unify(data, 1, Agree = c("Somewhat agree", "Strongly agree"),
       Disagree = c("Somewhat disagree", "Strongly disagree"),
       Neutral = "Neither agree nor disagree")
@@ -114,7 +112,7 @@ As seen above, the output tells you that you forgot to assign "Don't know" to a 
 
 The `unify()` function expects data that looks like this:
 
-```{r head, echo=FALSE}
+```{r head, echo=FALSE, error=TRUE}
 head(data, n = 10)
 ```
 
@@ -137,7 +135,7 @@ Responses do not need to be consistently labelled either within or between diffe
 
 You are not restricted to analysing just one question/column with `unify()`. You can specify multiple columns/questions to use for the output:
 
-```{r cols}
+```{r cols, error=TRUE}
 unify(data, c(1, 6, 7), # ...use columns 1, 6 and 7.
       Agree = c("Somewhat agree", "Strongly agree"),
       Disagree = c("Somwewhat disagree", "Strongly disagree"),
@@ -150,7 +148,7 @@ Likert-style questions can take different forms. For example, one question might
 
 `unify()` is very flexible to this; you don't need to worry about all response options being in each question/column, and can just code in each kind of response.
 
-```{r inconsistent}
+```{r inconsistent, error=TRUE}
 unify(data, c(1, 8, 9),
       Positive = c("Somewhat agree", "Strongly agree",
                    "Good", "Very good",
@@ -167,7 +165,7 @@ unify(data, c(1, 8, 9),
 
 If you want to only include only some response groups in the output but not from the calculations, we can use the `filter` argument.
 
-```{r filter}
+```{r filter, error=TRUE}
 unify(data, 1,
       Agree = c("Somewhat agree", "Strongly agree"),
       Disagree = c("Somwewhat disagree", "Strongly disagree"),
@@ -184,11 +182,11 @@ Unless you've set `unify()`'s gt_table() argument to `TRUE`, it will output as a
 
 Let's pretend we've already run `unify()` and assigned it to the name `united`...
 
-```{r united, echo=FALSE, message=FALSE}
+```{r united, echo=FALSE, message=FALSE, error=TRUE}
 united <- unify(data, c(1, 2, 3))
 ```
 
-```{r ggplot}
+```{r ggplot, error=TRUE}
 ggplot(data = united, # ...unify() output becomes ggplot()'s data argument
        aes(x = Response, y = Proportion)) +
   geom_bar() +
