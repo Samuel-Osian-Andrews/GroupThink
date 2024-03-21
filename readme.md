@@ -12,7 +12,7 @@ GroupThink
   - [Left Out Responses](#left-out-responses)
   - [Data for `unify()`](#data-for-unify)
   - [View Column Index Numbers](#view-column-index-numbers)
-- [The `assess()` Function](#the-assess-function)
+  - [The `assess()` Function](#the-assess-function)
 - [Further Functionality](#further-functionality)
   - [Aggregate Across Multiple Columns/Questions](#aggregate-across-multiple-columnsquestions)
   - [Make Formatted Tables](#make-formatted-tables)
@@ -193,7 +193,7 @@ colnames(data)
     ## [2] "The course workload is manageable within my schedule."
     ## [3] "Feedback from assignments is helpful for my learning."
 
-## The `assess()` function
+### The `assess()` function
 
 You might find it beneficial to run GroupThink’s `assess()` function,
 which provides an overview of the different response options in your
