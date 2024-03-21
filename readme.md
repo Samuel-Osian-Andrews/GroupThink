@@ -1,13 +1,7 @@
 GroupThink
 ================
 
-<figure>
-<img
-src="https://github.com/Samuel-Osian-Andrews/GroupThink/blob/main/readme_files/GroupThink.png"
-alt="Banner image for GroupThink package" />
-<figcaption aria-hidden="false"
-package</figcaption>
-</figure>
+![Banner image for GroupThink package](https://github.com/Samuel-Osian-Andrews/GroupThink/blob/main/readme_files/GroupThink_narrow.png)
 
 ## Introduction and Install
 
