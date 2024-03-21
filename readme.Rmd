@@ -7,6 +7,8 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+![Banner image for GroupThink package](https://github.com/Samuel-Osian-Andrews/GroupThink/blob/main/readme_files/GroupThink.png)
+
 ## Introduction and Install
 
 GroupThink is a package designed to assist in the analysis in categorical survey data. It mainly acts as an interface for existing `tidyverse` functions - but makes it easier to aggregate responses, do cross-question analysis, and avoid classic mistakes typical of survey data analysis.
@@ -32,6 +34,22 @@ GroupThink depends on `dplyr`, `tidyr` and `gt` libraries. If these aren't insta
 ```{r dependencies, error=FALSE, message=FALSE, results='hide', error=FALSE}
 install.packages(c("dplyr", "tidyr", "gt"))
 ```
+
+## Benefits of GroupThink
+
+GroupThink is a response to key bottlenecks and common mistakes when analysing survey data. The function is beneficial because it...
+
+-   **Allows for easy groupings.** `unify()` makes it very easy to group together different Likert-style responses (e.g. combining `Somewhat agree` with `Strongly agree`, or `Excellent` and `Very good`). It's now extremely difficult to make mistakes with incorrect groupings, as `unify()` alerts you of any unassigned responses.
+
+-   **Automates your calculations.** `unify()` handles n and proportion calculations for you, meaning you no longer have to undertake complex data manipulation tasks, avoiding functions such as `pivot_longer()`, which can result in inaccurate figures if you're not careful!
+
+-   **Works with full questions as column headers.** Typically, exporting survey responses (such as from Microsoft Forms or SurveyMonkey) will leave you with full questions (e.g. "Do you agree or disagree that...") as column headers. This is usually a nightmare to work with in R. Because `unify()` works on column indexes, rather than column names, you don't need to worry about recoding your columns or typing out full survey questions throughout your code.
+
+-   **Gives usable outputs.**. `unify()` neatly integrates with ggplot, allowing you to visualise your aggregated data. Alternatively, you can produce formatted tables through the gtTable argument.
+
+-   **Presents clear, readable syntax.** Even for those unfamiliar with R syntax, `unify()` makes it very clear exactly how you've grouped together your responses, improving readability and reproducibility.
+
+-   **Means faster insights.** With just a few lines of code, this function could save you hours worth of work for large survey projects.
 
 ```{r simulate, echo=FALSE, results='hide', message=FALSE, error=FALSE}
 # Activate libraries
@@ -69,7 +87,9 @@ data <- data %>%
   )
 ```
 
-## GroupThink 'at a glance'
+## Core functionality
+
+### The `unify()` function
 
 The `unify()` function groups together Likert-style responses for a given question or set of questions, returning a summarised output that contains the n and proportion for each of these groupings.
 
@@ -102,6 +122,7 @@ unify(data, 1, Agree = "Somewhat agree",
 
 As seen above, the output tells you that you forgot to assign "Strongly agree" to a grouping variable.
 
+These errors are crucial, since other R functions do not warn you if you haven't accounted for a group, or mistyped "Strongly **A**gree", as "Strongly **a**gree", for example.
 
 ### Data for unify()
 
@@ -121,22 +142,6 @@ Since GroupThink functions work with column **index numbers**, not column names,
 colnames(data)
 ```
 
-## Benefits of `unify()`
-
-`unify()` is a response to key bottlenecks and common mistakes when analysing survey data. The function is beneficial because it...
-
--   **Allows for easy groupings.** `unify()` makes it very easy to group together different Likert-style responses (e.g. combining `Somewhat agree` with `Strongly agree`, or `Excellent` and `Very good`). It's now extremely difficult to make mistakes with incorrect groupings, as `unify()` alerts you of any unassigned responses.
-
--   **Automates your calculations.** `unify()` handles n and proportion calculations for you, meaning you no longer have to undertake complex data manipulation tasks, avoiding functions such as `pivot_longer()`, which can result in inaccurate figures if you're not careful!
-
--   **Works with full questions as column headers**. Typically, exporting survey responses (such as from Microsoft Forms or SurveyMonkey) will leave you with full questions (e.g. "Do you agree or disagree that...") as column headers. This is usually a nightmare to work with in R. Because `unify()` works on column indexes, rather than column names, you don't need to worry about recoding your columns or typing out full survey questions throughout your code.
-
--   **Gives usable outputs**. `unify()` neatly integrates with ggplot, allowing you to visualise your aggregated data. Alternatively, you can produce formatted tables through the gtTable argument.
-
--   **Presents clear, readable syntax**. Even for those unfamiliar with R syntax, `unify()` makes it very clear exactly how you've grouped together your responses, improving readability and reproducibility.
-
--   **Means faster insights**. With just a few lines of code, this function could save you hours worth of work for large survey projects.
-
 ## The `assess()` function
 
 You might find it beneficial to run GroupThink's `assess()` function, which provides an overview of the different response options in your specified columns.
@@ -144,23 +149,6 @@ You might find it beneficial to run GroupThink's `assess()` function, which prov
 ```{r assess, error=TRUE}
 assess(data, cols = c(2, 3))
 ```
-
-## Make formatted tables
-
-Using the gtTable argument, `unify()` makes it simple to create nice, formatted tables.
-
-```{r gtTable, error=TRUE}
-unify(data, 1, Agree = c("Somewhat agree", "Strongly agree"),
-      Disagree = c("Somewhat disagree", "Strongly disagree"),
-      Neutral = "Neither agree nor disagree",
-      ignore = "Don't know",
-      
-      gtTable = TRUE, # ...set gtTable to TRUE
-      
-      filter = c("Agree", "Disagree"))
-```
-
-
 
 ## Further functionality
 
@@ -178,12 +166,30 @@ unify(data, c(1, 2, 3), # ...analyse Columns 1, 2 and 3
       
       hideN = TRUE) # ...(optional) hide n column from output (a lot cleaner!)
 ```
+
 ...Just make sure that you've accounted for each response option across your range of columns, otherwise you'll get an error.
 
+#### Make formatted tables
+
+Using the gtTable argument, `unify()` makes it simple to create nice, formatted tables.
+
+```{r gtTable, error=TRUE, message=FALSE, warning=FALSE}
+unify(data, 1, Agree = c("Somewhat agree", "Strongly agree"),
+      Disagree = c("Somewhat disagree", "Strongly disagree"),
+      Neutral = "Neither agree nor disagree",
+      ignore = "Don't know",
+      filter = c("Agree", "Disagree"),
+      hideN = TRUE, # ...optionally, hide N column
+      
+      gtTable = TRUE) # ...set gtTable to TRUE
+
+```
 
 #### Filter out responses from the output only
 
-If you want to only include only some response groups in the output but not from the calculations, we can use the `filter` argument.
+If you want to only display one response option in the output, we can use the `filter` argument.
+
+Note that this is different from the `ignore` parameter: `filter` removes unwanted responses *after* the calculations have been performed, while `ignore` removes them *before*.
 
 ```{r filter, error=TRUE}
 unify(data, 3,
@@ -228,7 +234,7 @@ ggplot(data = united, # ...unify() output becomes ggplot()'s data argument
 
 ## Even more functionality
 
-For other functionality not covered in this document, please run `?unify()` and `?assess()` to view the help file, which covers all function parameters.
+For other functionality not covered in this document, please run `?unify()` and `?assess()` to view the help files, which covers all function parameters.
 
 ## Future plans
 
