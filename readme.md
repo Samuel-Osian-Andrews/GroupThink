@@ -309,7 +309,7 @@ The other variable groupings are used for the calculations, but only
 
 #### Integrate with ggplot
 
-Unless you’ve set `unify()`’s gt_table() argument to `TRUE`, it will
+Unless you’ve set `unify()`’s gtTable() argument to `TRUE`, it will
 output as a tibble. This means it integrates neatly into `ggplot()`
 function calls.
 
@@ -339,9 +339,11 @@ function parameters.
 
 ## Future plans
 
-- Add support for `stargazer` tables into `unify()`.
+-  Add `unify()` support for demographic comparison (comparing figures between factors such as age, sex, etc.)
 
-- Develop a separate function for analysing multiple choice data for
+-  Add support for `stargazer` tables into `unify()`.
+
+-  Develop a separate function for analysing multiple choice data for
   data formats typical of exported survey data.
 
 ## Bug reports and feature requests
