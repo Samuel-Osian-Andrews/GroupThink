@@ -3,6 +3,27 @@ GroupThink
 
 ![Banner image for GroupThink package](https://github.com/Samuel-Osian-Andrews/GroupThink/blob/main/readme_files/GroupThink_narrow.png)
 
+## Table of Contents
+- [Introduction and Install](#introduction-and-install)
+  - [Dependencies](#dependencies)
+- [Benefits of GroupThink](#benefits-of-groupthink)
+- [Core Functionality](#core-functionality)
+  - [The `unify()` Function](#the-unify-function)
+  - [Left Out Responses](#left-out-responses)
+  - [Data for `unify()`](#data-for-unify)
+  - [View Column Index Numbers](#view-column-index-numbers)
+- [The `assess()` Function](#the-assess-function)
+- [Further Functionality](#further-functionality)
+  - [Aggregate Across Multiple Columns/Questions](#aggregate-across-multiple-columnsquestions)
+  - [Make Formatted Tables](#make-formatted-tables)
+  - [Filter Out Responses From the Output Only](#filter-out-responses-from-the-output-only)
+  - [Integrate with ggplot](#integrate-with-ggplot)
+- [Even More Functionality](#even-more-functionality)
+- [Future Plans](#future-plans)
+- [Bug Reports and Feature Requests](#bug-reports-and-feature-requests)
+
+
+
 ## Introduction and Install
 
 GroupThink is a package designed to assist in the analysis in
