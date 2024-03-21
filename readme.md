@@ -47,7 +47,9 @@ library(GroupThink)
 ```
 
 As GroupThink is still in development, you should periodically reinstall
-the package to get updates.
+the package to get updates.  
+
+&nbsp;  
 
 ### Dependencies
 
@@ -58,6 +60,8 @@ to run:
 ``` r
 install.packages(c("dplyr", "tidyr", "gt"))
 ```
+
+&nbsp;  
 
 ## Benefits of GroupThink
 
@@ -95,6 +99,9 @@ analysing survey data. The function is beneficial because it…
 - **Means faster insights.** With just a few lines of code, this
   function could save you hours worth of work for large survey projects.
 
+&nbsp;  
+
+
 ## Core functionality
 
 ### The `unify()` function
@@ -129,7 +136,8 @@ ignored. You may include as many grouping labels as you’d like.
 There’s of course nothing wrong with having just 1 response option per
 group (e.g. `"Somewhat agree" = "Somewhat agree"`). The main purpose of
 `unify()` is that it forces you to be **intentional** with how you
-handle your data, to improve consistency and avoid mistakes.
+handle your data, to improve consistency and avoid mistakes.  
+&nbsp;  
 
 ### Left out responses
 
@@ -152,7 +160,9 @@ agree” to a grouping variable.
 
 These errors are crucial, since other R functions do not warn you if you
 haven’t accounted for a group, or mistyped “Strongly **A**gree”, as
-“Strongly **a**gree”, for example.
+“Strongly **a**gree”, for example.  
+&nbsp;  
+
 
 ### Data for unify()
 
@@ -177,7 +187,9 @@ The `unify()` function expects data that looks like this:
 
 Responses do not need to be consistently labelled either within or
 between different questions/columns, and can contain missing data
-(you’ll likely want to assign `NA` to the ignore parameter).
+(you’ll likely want to assign `NA` to the ignore parameter).  
+&nbsp;  
+
 
 ### View column index numbers
 
@@ -192,6 +204,8 @@ colnames(data)
     ## [1] "I find the course material engaging and relevant."    
     ## [2] "The course workload is manageable within my schedule."
     ## [3] "Feedback from assignments is helpful for my learning."
+&nbsp;  
+
 
 ### The `assess()` function
 
@@ -224,6 +238,8 @@ assess(data, cols = c(2, 3))
     ## Strongly disagree
     ## Unsure
     ## NA
+&nbsp;  
+
 
 ## Further functionality
 
@@ -253,9 +269,9 @@ unify(data, c(1, 2, 3), # ...analyse Columns 1, 2 and 3
     ## # ℹ abbreviated names: ¹​`Positive (Proportion)`, ²​`Negative (Proportion)`
 
 …Just make sure that you’ve accounted for each response option across
-your range of columns, otherwise you’ll get an error.
+your range of columns, otherwise you’ll get an error.  
 
-
+&nbsp;  
 
 #### Make formatted tables
 
@@ -277,9 +293,8 @@ Question | Agree (Proportion) | Disagree (Proportion)
 --- | --- | ---
 I find the course material engaging and relevant. | 43.2 | 36.4
 
-
-
-
+&nbsp;  
+  
 #### Filter out responses from the output only
 
 If you want to only display one response option in the output, we can
@@ -305,7 +320,9 @@ unify(data, 3,
     ## 1 Feedback from assignments is helpful for my …          37                 38.9
 
 The other variable groupings are used for the calculations, but only
-“Agree” responses are shown in the final output.
+“Agree” responses are shown in the final output.  
+
+&nbsp;  
 
 #### Integrate with ggplot
 
@@ -314,7 +331,7 @@ output as a tibble. This means it integrates neatly into `ggplot()`
 function calls.
 
 Let’s pretend we’ve already run `unify()` on columns 1, 2 & 3, and
-assigned it to the name `united`…
+assigned it to the name `united`…  
 
 ``` r
 ggplot(data = united, # ...unify() output becomes ggplot()'s data argument
@@ -331,11 +348,15 @@ ggplot(data = united, # ...unify() output becomes ggplot()'s data argument
 
 ![](readme_files/figure-gfm/ggplot-1.png)<!-- -->
 
+&nbsp;  
+
 ## Even more functionality
 
 For other functionality not covered in this document, please run
 `?unify()` and `?assess()` to view the help files, which covers all
-function parameters.
+function parameters.  
+
+&nbsp;  
 
 ## Future plans
 
@@ -344,15 +365,15 @@ function parameters.
 -  Add support for `stargazer` tables into `unify()`.
 
 -  Develop a separate function for analysing multiple choice data for
-  data formats typical of exported survey data.
+  data formats typical of exported survey data.  
+
+&nbsp;  
 
 ## Bug reports and feature requests
 
 Please do let me know of any issues you come across. You can use the
-[Issues]([url](https://github.com/Samuel-Osian-Andrews/GroupThink/issues)) tab in GitHub for any bug reports.
+[Issues](https://github.com/Samuel-Osian-Andrews/GroupThink/issues) tab in GitHub for any bug reports.
 
 If you have any ideas for existing features, or perhaps even new ones,
-then I’d love to hear them. Let me know in the [Discussions]([url](https://github.com/Samuel-Osian-Andrews/GroupThink/discussions)https://github.com/Samuel-Osian-Andrews/GroupThink/discussions) tab in
+then I’d love to hear them. Let me know in the [Discussions](https://github.com/Samuel-Osian-Andrews/GroupThink/discussions) tab in
 GitHub.
-
-I am also open to invitations to collaborate.
