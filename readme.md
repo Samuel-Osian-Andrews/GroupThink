@@ -3,6 +3,8 @@ GroupThink
 
 ![Banner image for GroupThink package](https://github.com/Samuel-Osian-Andrews/GroupThink/blob/main/readme_files/GroupThink_narrow.png)
 
+![Graphic depicting code and output](https://github.com/Samuel-Osian-Andrews/GroupThink/blob/main/readme_files/GroupThink_second.png)
+
 ## Table of Contents
 - [Introduction and Install](#introduction-and-install)
   - [Dependencies](#dependencies)
