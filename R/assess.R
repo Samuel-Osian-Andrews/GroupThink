@@ -9,7 +9,7 @@ assess <- function(df, cols) {
   # Ensure cols is a vector, even if it's just 1
   cols <- as.vector(cols)
 
-  cols_names <- names(data)[cols]
+  cols_names <- names(df)[cols]
 
   cat("\n\nExamining the following columns:\n\n")
 
@@ -19,7 +19,7 @@ assess <- function(df, cols) {
   }
 
   # Show unique responses across all questions
-  processed_df <- data %>%
+  processed_df <- df %>%
     tidyr::pivot_longer(all_of(cols_names),
                         names_to = "Question", values_to = "Response")
 
